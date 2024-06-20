@@ -1,4 +1,4 @@
-namespace weddingApp
+namespace weddingApp.Model
 {
     public class WeatherForecast
     {
