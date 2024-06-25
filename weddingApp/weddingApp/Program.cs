@@ -1,4 +1,7 @@
+using System.Text.Json.Serialization;
+using weddingApp.Data;
 using weddingApp.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,25 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IWeatherForecastService, WeatherForecastService>();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<WeddingAppContext>(
+    option => option.UseNpgsql(builder.Configuration.GetConnectionString("WeddingDB"))
+    );
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+);
+
+var allowSpecificOrigins = "_allowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:5173");
+                      });
+});
 var app = builder.Build();
+app.UseCors(allowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
