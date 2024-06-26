@@ -8,9 +8,13 @@ namespace weddingApp.Model.Entities
     public class Guest
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string FirsName { get; set; }
+        public string LastName { get; set; }
         public string Email { get; set; }
-        public int CoupleId { get; set; }
-        public Couple Couple { get; set; }
+        public string Phone { get; set; }
+        public bool AccompanyingPerson { get; set; }
+        public bool InviteSended { get; set; }
+        public int WeddingEventId { get; set; }
+        public WeddingEvent WeddingEvent { get; set; }
     }
 }

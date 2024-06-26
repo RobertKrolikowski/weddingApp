@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\Entities\" />
     <Folder Include="Model\DTO%27s\" />
+    <Folder Include="Model\Enum\" />
   </ItemGroup>
 
 </Project>
