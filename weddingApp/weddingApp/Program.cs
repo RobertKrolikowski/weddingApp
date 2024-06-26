@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using weddingApp.Data;
 using weddingApp.Services;
 using Microsoft.EntityFrameworkCore;
+using weddingApp.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
 );
+builder.Services.AddAutoMapper(typeof(WeddingMappingProfile));
 
 var allowSpecificOrigins = "_allowSpecificOrigins";
 builder.Services.AddCors(options =>
