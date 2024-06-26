@@ -10,6 +10,7 @@ namespace weddingApp.Model.Entities
         public int Id { get; set; }
         public string BrideName { get; set; }
         public string GroomName { get; set; }
-        public DateTime WeddingDate { get; set; }
+        public int WeddingEventId { get; set; }
+        public WeddingEvent WeddingEvent { get; set; }
     }
 }
