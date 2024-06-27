@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace weddingApp.Model.Entities
+﻿namespace weddingApp.Model.DTO_s
 {
-    public class Guest
+    public record GuestDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -13,8 +8,7 @@ namespace weddingApp.Model.Entities
         public string Email { get; set; }
         public string Phone { get; set; }
         public bool AccompanyingPerson { get; set; }
-        public bool InviteSended { get; set; }
+        public bool InviteSent { get; set; }
         public int WeddingEventId { get; set; }
-        public WeddingEvent WeddingEvent { get; set; }
     }
 }
