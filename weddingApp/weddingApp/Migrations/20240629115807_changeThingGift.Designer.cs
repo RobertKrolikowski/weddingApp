@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using weddingApp.Data;
@@ -11,9 +12,11 @@ using weddingApp.Data;
 namespace weddingApp.Migrations
 {
     [DbContext(typeof(WeddingAppContext))]
-    partial class WeddingAppContextModelSnapshot : ModelSnapshot
+    [Migration("20240629115807_changeThingGift")]
+    partial class changeThingGift
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
