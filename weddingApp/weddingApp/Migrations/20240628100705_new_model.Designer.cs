@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using weddingApp.Data;
@@ -11,9 +12,11 @@ using weddingApp.Data;
 namespace weddingApp.Migrations
 {
     [DbContext(typeof(WeddingAppContext))]
-    partial class WeddingAppContextModelSnapshot : ModelSnapshot
+    [Migration("20240628100705_new_model")]
+    partial class new_model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,6 +61,7 @@ namespace weddingApp.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsPurchased")
@@ -66,15 +70,10 @@ namespace weddingApp.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("ThingId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("WeddingEventID")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ThingId");
 
                     b.HasIndex("WeddingEventID");
 
@@ -157,13 +156,20 @@ namespace weddingApp.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("GiftId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GiftId")
+                        .IsUnique();
 
                     b.ToTable("Things");
                 });
@@ -266,19 +272,11 @@ namespace weddingApp.Migrations
 
             modelBuilder.Entity("weddingApp.Model.Entities.Gift", b =>
                 {
-                    b.HasOne("weddingApp.Model.Entities.Thing", "Thing")
-                        .WithMany("Gift")
-                        .HasForeignKey("ThingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("weddingApp.Model.Entities.WeddingEvent", "WeddingEvent")
                         .WithMany("Gifts")
                         .HasForeignKey("WeddingEventID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Thing");
 
                     b.Navigation("WeddingEvent");
                 });
@@ -305,6 +303,17 @@ namespace weddingApp.Migrations
                     b.Navigation("WeddingService");
                 });
 
+            modelBuilder.Entity("weddingApp.Model.Entities.Thing", b =>
+                {
+                    b.HasOne("weddingApp.Model.Entities.Gift", "Gift")
+                        .WithOne("Thing")
+                        .HasForeignKey("weddingApp.Model.Entities.Thing", "GiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gift");
+                });
+
             modelBuilder.Entity("weddingApp.Model.Entities.WeddingService", b =>
                 {
                     b.HasOne("weddingApp.Model.Entities.WeddingEvent", "WeddingEvent")
@@ -316,9 +325,10 @@ namespace weddingApp.Migrations
                     b.Navigation("WeddingEvent");
                 });
 
-            modelBuilder.Entity("weddingApp.Model.Entities.Thing", b =>
+            modelBuilder.Entity("weddingApp.Model.Entities.Gift", b =>
                 {
-                    b.Navigation("Gift");
+                    b.Navigation("Thing")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("weddingApp.Model.Entities.WeddingEvent", b =>

@@ -7,7 +7,7 @@ namespace weddingApp.Data
     {
         public WeddingAppContext(DbContextOptions<WeddingAppContext> option): base(option) { }
         public DbSet<Couple> Couples { get; set; }
-        public DbSet<WeddingEvent> Events { get; set; }
+        public DbSet<WeddingEvent> WeddingEvents { get; set; }
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<Guest> Guests { get; set; }
         public DbSet<WeddingService> WeddingServices { get; set; }
