@@ -13,7 +13,7 @@ namespace weddingApp.MappingProfiles
             CreateMap<Gift, GiftDto>();
             CreateMap<Guest, GuestDto>();
             CreateMap<Service, ServiceDto>();
-            CreateMap<Thing, ThingDto>();
+            CreateMap<Thing, ThingDto>().ReverseMap();
             //CreateMap<User, UserDto>();
             CreateMap<WeddingEvent, WeddingEventDto>();
             CreateMap<WeddingService, WeddingServiceDto>();

@@ -7,7 +7,7 @@ namespace weddingApp.Services
     public interface IThingService
     {
         Task<IEnumerable<Thing>> GetAllThings();
-        Task<Thing> GetThing(int id);
+        Task<Thing> GetThingById(int id);
         Task<Thing> CreateThing(Thing thing);
         Task<Thing> DeleteThing(Thing thing);
 
