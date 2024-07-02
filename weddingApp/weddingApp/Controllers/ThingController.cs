@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using weddingApp.Model.DTO_s;
 using weddingApp.Model.Entities;
 using weddingApp.Services;
 
@@ -9,36 +11,45 @@ namespace weddingApp.Controllers
     public class ThingController : ControllerBase
     {
         private readonly IThingService _thingService;
-        public ThingController(IThingService thingService)
+        private readonly IMapper _mapper;
+        public ThingController(IThingService thingService, IMapper mapper)
         {
             _thingService = thingService;
+            _mapper = mapper;
         }
         [HttpGet("GetAllThings")]
         public async Task<ActionResult<IEnumerable<Thing>>> GetAllThings()
         {
-            IEnumerable<Thing>? things = await _thingService.GetAllThings();
-            if (things != null && things.Count() > 0 )
-                return Ok(things);
-            else
+            IEnumerable<Thing> things = await _thingService.GetAllThings();
+            if (things == null || things.Count() <= 0)
                 return BadRequest("Empty table");
+
+            IEnumerable<ThingDto> thingsDto = _mapper.Map<IEnumerable<ThingDto>>(things);
+            return Ok(thingsDto);
+
         }
-        [HttpGet("GetThing")]
-        public async Task<ActionResult<Thing>> GetThing(int id)
-        { 
-            var thing = await _thingService.GetThing(id);
-            if (thing != null)
-                return Ok(thing);
-            else
+        [HttpGet("GetThingById")]
+        public async Task<ActionResult<Thing>> GetThingById(int id)
+        {
+            var thing = await _thingService.GetThingById(id);
+            if (thing == null)
                 return BadRequest("This thing dosn't exist.");
+
+            var thingDto=_mapper.Map<ThingDto>(thing);
+            return Ok(thingDto);
         }
 
         [HttpPost("CreateThing")]
-        public async Task<ActionResult> CreateThing([FromBody]Thing thing)
+        public async Task<ActionResult> CreateThing([FromBody] ThingDto thingDto)
         {
-            if (thing == null)
-                return BadRequest("Incorrect thing");
-            else
-                return Ok(await _thingService.CreateThing(thing));
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            Thing thing = _mapper.Map<Thing>(thingDto);
+            Thing? createdThing = await _thingService.CreateThing(thing);
+
+            ThingDto? createdThingDto = _mapper.Map<ThingDto>(createdThing);
+            return CreatedAtAction("GetThingById", new { id = createdThingDto.Id }, createdThingDto);
         }
 
         //[HttpPost("CreateThing")]
@@ -52,8 +63,8 @@ namespace weddingApp.Controllers
 
         [HttpDelete("DeleteThing")]
         public async Task<ActionResult> DeleteThing(int id)
-        { 
-            var thing = await _thingService.GetThing(id);
+        {
+            var thing = await _thingService.GetThingById(id);
             if (thing != null)
                 return Ok(await _thingService.DeleteThing(thing));
             else

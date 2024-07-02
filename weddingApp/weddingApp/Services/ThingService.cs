@@ -20,7 +20,7 @@ namespace weddingApp.Services
             Task<List<Thing>>? things = _db.Things.ToListAsync();
             return await things;
         }
-        public async Task<Thing> GetThing(int id)
+        public async Task<Thing> GetThingById(int id)
         {
             var thing = _db.Things.FirstOrDefaultAsync(x => x.Id == id);
             return await thing;
