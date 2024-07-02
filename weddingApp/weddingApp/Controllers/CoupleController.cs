@@ -16,9 +16,9 @@ namespace weddingApp.Controllers
         [HttpGet("GetAllCouple")]
         public async Task<ActionResult<IEnumerable<Couple>>> GetAllCouple()
         {
-            var couples = _coupleService.GetAllCouples();
-            if(couples.Result != null && couples.Result.Count() > 0)
-                return Ok(await couples);
+            IEnumerable<Couple>? couples = await _coupleService.GetAllCouples();
+            if(couples != null && couples.Count() > 0)
+                return Ok(couples);
             else
                 return BadRequest("Empty table");
         }

@@ -16,9 +16,9 @@ namespace weddingApp.Controllers
         [HttpGet("GetAllGifts")]
         public async Task<ActionResult<IEnumerable<Gift>>> GetAllGifts()
         {
-            Task<IEnumerable<Gift>>? gifts = _giftService.GetAllGifts();
-            if (gifts.Result != null && gifts.Result.Count() > 0)
-                return Ok(await gifts);
+            IEnumerable<Gift>? gifts = await _giftService.GetAllGifts();
+            if (gifts != null && gifts.Count() > 0)
+                return Ok( gifts);
             else
                 return BadRequest("Empty table");
         }
