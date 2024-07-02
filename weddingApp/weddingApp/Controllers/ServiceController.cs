@@ -17,10 +17,10 @@ namespace weddingApp.Controllers
         public async Task<ActionResult<IEnumerable<Service>>> GetAllService()
         {
             IEnumerable<Service>? services = await _serviceService.GetAllServices();
-            if (services != null && services.Count() > 0)
-                return Ok(services);
-            else 
+            if (services == null || services.Count() <= 0)
                 return BadRequest("Empty table");
+            else 
+                return Ok(services);
         }
     }
 }
