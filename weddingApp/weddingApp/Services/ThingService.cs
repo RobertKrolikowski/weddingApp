@@ -20,6 +20,11 @@ namespace weddingApp.Services
             Task<List<Thing>>? things = _db.Things.ToListAsync();
             return await things;
         }
+        public async Task<Thing> GetThing(int id)
+        {
+            var thing = _db.Things.FirstOrDefaultAsync(x => x.Id == id);
+            return await thing;
+        }
         public async Task<Thing> CreateThing(Thing thing)
         {
             _db.Things.Add(thing);
@@ -27,7 +32,12 @@ namespace weddingApp.Services
             return thing;
         }
 
-        
+        public async Task<Thing> DeleteThing(Thing thing)
+        {
+            _db.Things.Remove(thing);
+            _db.SaveChanges();
+            return thing;
 
+        }
     }
 }

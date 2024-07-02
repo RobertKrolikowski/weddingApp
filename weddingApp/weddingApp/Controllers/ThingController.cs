@@ -16,19 +16,48 @@ namespace weddingApp.Controllers
         [HttpGet("GetAllThings")]
         public async Task<ActionResult<IEnumerable<Thing>>> GetAllThings()
         {
-            Task<IEnumerable<Thing>>? things = _thingService.GetAllThings();
-            if (things.Result != null && things.Result.Count() > 0 )
-                return Ok(await things);
+            IEnumerable<Thing>? things = await _thingService.GetAllThings();
+            if (things != null && things.Count() > 0 )
+                return Ok(things);
             else
                 return BadRequest("Empty table");
         }
+        [HttpGet("GetThing")]
+        public async Task<ActionResult<Thing>> GetThing(int id)
+        { 
+            var thing = await _thingService.GetThing(id);
+            if (thing != null)
+                return Ok(thing);
+            else
+                return BadRequest("This thing dosn't exist.");
+        }
+
+        [HttpPost("CreateThing")]
+        public async Task<ActionResult> CreateThing([FromBody]Thing thing)
+        {
+            if (thing == null)
+                return BadRequest("Incorrect thing");
+            else
+                return Ok(await _thingService.CreateThing(thing));
+        }
+
         //[HttpPost("CreateThing")]
-        //public async Task<ActionResult> CreateThing(Thing thing)
+        //public async Task<ActionResult> CreateThing(string name)
         //{
-        //    if (thing == null)
+        //    if (string.IsNullOrWhiteSpace(name))
         //        return BadRequest("Incorrect thing");
         //    else
-        //        return Ok(await _thingService.CreateThing(thing));
-        //}
+        //        return Ok(await _thingService.CreateThing(new Thing() { Name = name}));
+        //} nie wiem jak to zrobić dobrze w jednym 
+
+        [HttpDelete("DeleteThing")]
+        public async Task<ActionResult> DeleteThing(int id)
+        { 
+            var thing = await _thingService.GetThing(id);
+            if (thing != null)
+                return Ok(await _thingService.DeleteThing(thing));
+            else
+                return BadRequest("Incorrect id");
+        }
     }
 }
