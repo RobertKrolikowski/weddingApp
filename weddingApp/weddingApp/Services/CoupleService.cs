@@ -13,10 +13,24 @@ namespace weddingApp.Services
             _configuration = configuration; 
             _db = db;
         }
+
+
         public async Task<IEnumerable<Couple>> GetAllCouples()
         {
-            var couples = _db.Couples.ToListAsync();
+            Task<List<Couple>>? couples = _db.Couples.ToListAsync();
             return await couples;
+        }
+
+        public async Task<Couple> GetCouplesById(int id)
+        {
+            Task<Couple?>? couple = _db.Couples.FirstOrDefaultAsync(x=>x.Id == id);
+            return await couple;
+        }
+        public async Task<Couple> CreateCouple(Couple couple)
+        {
+            _db.Couples.Add(couple);
+            _db.SaveChanges();
+            return couple;
         }
     }
 }
