@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using weddingApp.Data;
 using weddingApp.Model.DTO_s;
 using weddingApp.Model.Entities;
+using weddingApp.Services.Interfaces;
 
-namespace weddingApp.Services
+namespace weddingApp.Services.Implementation
 {
     public class ThingService : IThingService
     {
@@ -22,20 +23,42 @@ namespace weddingApp.Services
         }
         public async Task<Thing> GetThingById(int id)
         {
-            var thing = _db.Things.FirstOrDefaultAsync(x => x.Id == id);
+            Task<Thing?>? thing = _db.Things.FirstOrDefaultAsync(x => x.Id == id);
             return await thing;
         }
         public async Task<Thing> CreateThing(Thing thing)
         {
             _db.Things.Add(thing);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return thing;
+        }
+        public async Task<Thing> UpdateThing(Thing thing)
+        {
+            Thing? existingThing = await _db.Things.FindAsync(thing.Id);
+
+            if (existingThing == null)
+                throw new ArgumentException($"Thing with id {thing.Id} not found");
+
+            existingThing.Name = thing.Name;
+            existingThing.Description = thing.Description;
+            existingThing.Gift = thing.Gift;
+
+            await _db.SaveChangesAsync();
+
+            return existingThing;
         }
 
         public async Task<Thing> DeleteThing(Thing thing)
         {
             _db.Things.Remove(thing);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
+            return thing;
+        }
+
+        public async Task<Thing> DeleteGetThingByIdAsyncThing(Thing thing)
+        {
+            _db.Things.Remove(thing);
+            await _db.SaveChangesAsync();
             return thing;
 
         }

@@ -1,6 +1,6 @@
 ﻿using weddingApp.Model.Entities;
 
-namespace weddingApp.Services
+namespace weddingApp.Services.Interfaces
 {
     public interface IWeddingEventService
     {

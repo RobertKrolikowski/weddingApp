@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using weddingApp.Model;
+using weddingApp.Services.Interfaces;
 
-namespace weddingApp.Services
+namespace weddingApp.Services.Implementation
 {
     public class WeatherForecastService : IWeatherForecastService
     {

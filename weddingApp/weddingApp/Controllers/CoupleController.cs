@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using weddingApp.Model;
 using weddingApp.Model.DTO_s;
 using weddingApp.Model.Entities;
-using weddingApp.Services;
+using weddingApp.Services.Interfaces;
 
 namespace weddingApp.Controllers
 {

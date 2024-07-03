@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using weddingApp.Model.Entities;
-using weddingApp.Services;
+using weddingApp.Services.Interfaces;
 
 namespace weddingApp.Controllers
 {

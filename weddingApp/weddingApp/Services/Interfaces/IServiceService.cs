@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using weddingApp.Model.Entities;
 
-namespace weddingApp.Services
+namespace weddingApp.Services.Interfaces
 {
     public interface IServiceService
     {
