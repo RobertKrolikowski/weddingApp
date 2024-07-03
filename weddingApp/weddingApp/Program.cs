@@ -1,8 +1,9 @@
 using System.Text.Json.Serialization;
 using weddingApp.Data;
-using weddingApp.Services;
 using Microsoft.EntityFrameworkCore;
 using weddingApp.MappingProfiles;
+using weddingApp.Services.Interfaces;
+using weddingApp.Services.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 

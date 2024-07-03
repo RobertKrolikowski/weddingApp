@@ -1,6 +1,6 @@
 ﻿using weddingApp.Model;
 
-namespace weddingApp.Services
+namespace weddingApp.Services.Interfaces
 {
     public interface IWeatherForecastService
     {
