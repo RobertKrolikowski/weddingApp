@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using weddingApp.Model.DTO_s;
 using weddingApp.Model.Entities;
-using weddingApp.Services;
+using weddingApp.Services.Interfaces;
 
 namespace weddingApp.Controllers
 {
@@ -33,7 +33,7 @@ namespace weddingApp.Controllers
         {
             var thing = await _thingService.GetThingById(id);
             if (thing == null)
-                return BadRequest("This thing dosn't exist.");
+                return BadRequest("This thing doesn't exist.");
 
             var thingDto=_mapper.Map<ThingDto>(thing);
             return Ok(thingDto);
@@ -52,23 +52,30 @@ namespace weddingApp.Controllers
             return CreatedAtAction("GetThingById", new { id = createdThingDto.Id }, createdThingDto);
         }
 
-        //[HttpPost("CreateThing")]
-        //public async Task<ActionResult> CreateThing(string name)
-        //{
-        //    if (string.IsNullOrWhiteSpace(name))
-        //        return BadRequest("Incorrect thing");
-        //    else
-        //        return Ok(await _thingService.CreateThing(new Thing() { Name = name}));
-        //} nie wiem jak to zrobić dobrze w jednym 
+        [HttpPut("UpdateThing/{id}")]
+        public async Task<IActionResult> UpdateThing(int id, [FromBody] ThingDto thingDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            Thing? existingThing = await _thingService.GetThingById(id);
+            if (existingThing == null)
+                return NotFound();
+
+            Thing? thingToUpdate = _mapper.Map<Thing>(thingDto);
+            await _thingService.UpdateThing(thingToUpdate);
+
+            return Ok(_mapper.Map<ThingDto>(thingToUpdate));
+        }
 
         [HttpDelete("DeleteThing")]
         public async Task<ActionResult> DeleteThing(int id)
         {
-            var thing = await _thingService.GetThingById(id);
-            if (thing != null)
-                return Ok(await _thingService.DeleteThing(thing));
-            else
+            Thing? thing = await _thingService.GetThingById(id);
+            if (thing == null)
                 return BadRequest("Incorrect id");
+            await _thingService.DeleteThing(thing);
+            return Ok();
         }
     }
 }
