@@ -42,7 +42,7 @@ namespace weddingApp.Services.Implementation
             existingThing.Name = thing.Name;
             existingThing.Description = thing.Description;
             existingThing.Gift = thing.Gift;
-
+            _db.Things.Update(existingThing);
             await _db.SaveChangesAsync();
 
             return existingThing;
