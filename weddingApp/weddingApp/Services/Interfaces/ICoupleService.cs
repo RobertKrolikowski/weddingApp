@@ -7,5 +7,7 @@ namespace weddingApp.Services.Interfaces
         Task<IEnumerable<Couple>> GetAllCouples();
         Task<Couple> GetCouplesById(int id);
         Task<Couple> CreateCouple(Couple couple);
+        Task<Couple> UpdateCouple(Couple couple);
+        Task<Couple> DeleteCouple(Couple couple);
     }
 }
