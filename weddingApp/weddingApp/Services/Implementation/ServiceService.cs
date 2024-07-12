@@ -37,7 +37,7 @@ namespace weddingApp.Services.Implementation
         {
             Service? existingService = await _db.Services.FindAsync(service.Id);
             if (existingService == null)
-                throw new ArgumentException($"Service wth id {service.Id} not found.";
+                throw new ArgumentException($"Service with id {service.Id} not found.");
 
             existingService.Name = service.Name;
             existingService.Description = service.Description;
