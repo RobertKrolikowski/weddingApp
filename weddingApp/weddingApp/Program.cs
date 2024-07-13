@@ -7,6 +7,7 @@ using weddingApp.Services.Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using weddingApp.Services.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICoupleService, CoupleService>();
 builder.Services.AddScoped<IWeddingEventService, WeddingEventService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WeddingAppContext>(

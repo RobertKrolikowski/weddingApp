@@ -21,21 +21,40 @@ public class AuthController : ControllerBase
         _userService = userService;
         _mapper = mapper;
     }
-
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserDto userDto)
+    //TODO dodanie register i login DTO
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] User registerDto)
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        User? user = await _userService.Authenticate(userDto.Login, userDto.Password);
+        User? existingUser = await _userService.Authenticate(registerDto.Login, registerDto.Password);
+        if (existingUser != null)
+            return Conflict("Username is already taken");
+
+        User? user = _mapper.Map<User>(registerDto);
+        User? createdUser = await _userService.CreateUserAsync(user);
+
+        UserDto? userDto = _mapper.Map<UserDto>(createdUser);
+        string? token = _jwtService.GenerateToken(createdUser);
+
+        return CreatedAtAction(nameof(Register), new { username = userDto.Login }, new { Token = token, User = userDto });
+    }
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] UserDto loginDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        User? user = await _userService.Authenticate(loginDto.Login, loginDto.Password);
 
         if (user == null)
-            return Unauthorized();
+            return Unauthorized("Invalid credentials");
 
         string? token = _jwtService.GenerateToken(user);
-        UserDto? loginDto = _mapper.Map<UserDto>(user);
+        UserDto? userDto = _mapper.Map<UserDto>(user);
 
-        return Ok(new { Token = token, User = loginDto });
+        return Ok(new { Token = token, User = userDto });
     }
+  
 }
