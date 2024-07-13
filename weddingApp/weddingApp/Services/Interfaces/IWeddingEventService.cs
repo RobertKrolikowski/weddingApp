@@ -9,11 +9,11 @@ namespace weddingApp.Services.Interfaces
         Task<WeddingEvent> CreateWeddingEvent(WeddingEvent weddingEvent);
         Task<WeddingEvent> UpdateWeddingEvent(WeddingEvent weddingEvent);
         Task<WeddingEvent> DeleteWeddingEvent(WeddingEvent weddingEvent);
-        Task AddGift(int idWeddingEvent, int idGift);
-        Task RemoveGift(int idWeddingEvent, int idGift);
-        Task AddGuest(int idWeddingEvent, int idGuest);
-        Task RemoveGuest(int idWeddingEvent, int idGuest);
-        Task AddWeddingService(int idWeddingEvent, int idWeddingService);
-        Task RemoveWeddingService(int idWeddingEvent, int idWeddingService);
+        Task<WeddingEvent> AddGift(int idWeddingEvent, int idGift);
+        Task<WeddingEvent> RemoveGift(int idWeddingEvent, int idGift);
+        Task<WeddingEvent> AddGuest(int idWeddingEvent, int idGuest);
+        Task<WeddingEvent> RemoveGuest(int idWeddingEvent, int idGuest);
+        Task<WeddingEvent> AddWeddingService(int idWeddingEvent, int idWeddingService);
+        Task<WeddingEvent> RemoveWeddingService(int idWeddingEvent, int idWeddingService);
     }
 }
