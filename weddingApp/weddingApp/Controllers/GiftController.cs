@@ -48,7 +48,7 @@ namespace weddingApp.Controllers
 
             return CreatedAtAction("GetGiftById", new { id = createdGiftDto.Id }, createdGiftDto);
         }
-        [HttpPost("UpdateGift/{id}")]
+        [HttpPut("UpdateGift/{id}")]
         public async Task<ActionResult> UpdateGift(int id, [FromBody] GiftDto giftDto)
         { 
             if(!ModelState.IsValid)
