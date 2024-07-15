@@ -12,11 +12,16 @@ namespace weddingApp.Controllers
     {
         private readonly IWeddingEventService _weddingEventService;
         private readonly IGiftService _giftService;
+        private readonly IGuestService _guestService;
+        private readonly IWeddingServiceService _weddingServiceService;
         private readonly IMapper _mapper;
-        public WeddingEventController(IWeddingEventService weddingEventService, IGiftService giftService, IMapper mapper)
+        public WeddingEventController(IWeddingEventService weddingEventService, IGiftService giftService, IGuestService guestService, 
+            IWeddingServiceService weddingServiceService,IMapper mapper)
         {
             _weddingEventService = weddingEventService;
             _giftService = giftService;
+            _guestService = guestService;
+            _weddingServiceService = weddingServiceService;
             _mapper = mapper;
         }
 
@@ -80,6 +85,69 @@ namespace weddingApp.Controllers
             var weddingEventUpdated = await _weddingEventService.AddGift(idWeddingEvent,idGift);
             return Ok(_mapper.Map<WeddingEventDto>(weddingEventUpdated));
         }
+        [HttpPut("RemoveGift")]
+        public async Task<ActionResult> RemoveGift(int idWeddingEvent, int idGift)
+        {
+            WeddingEvent? existingWeddingEvent = await _weddingEventService.GetWeddingEventById(idWeddingEvent);
+            if (existingWeddingEvent == null)
+                return NotFound();
+
+            Gift? existingGift = await _giftService.GetGiftById(idGift);
+            if (existingGift == null)
+                return NotFound();
+            var weddingEventUpdated = await _weddingEventService.RemoveGift(idWeddingEvent, idGift);
+            return Ok(_mapper.Map<WeddingEventDto>(weddingEventUpdated));
+        }
+        [HttpPut("AddGuest")]
+        public async Task<ActionResult> AddGuest(int idWeddingEvent, int idGuest)
+        {
+            WeddingEvent? existingWeddingEvent = await _weddingEventService.GetWeddingEventById(idWeddingEvent);
+            if (existingWeddingEvent == null)
+                return NotFound();
+            var existingGuest = await _guestService.GetGuestById(idGuest);
+            if (existingGuest == null)
+                return NotFound();
+            WeddingEvent? weddingEventUpdated = await _weddingEventService.AddGuest(idWeddingEvent, idGuest);
+            return Ok(_mapper.Map<WeddingEventDto>(weddingEventUpdated));
+        }
+
+        [HttpPut("RemoveGuest")]
+        public async Task<ActionResult> RemoveGuest(int idWeddingEvent, int idGuest)
+        {
+            WeddingEvent? existingWeddingEvent = await _weddingEventService.GetWeddingEventById(idWeddingEvent);
+            if (existingWeddingEvent == null)
+                return NotFound();
+            var existingGuest = await _guestService.GetGuestById(idGuest);
+            if (existingGuest == null)
+                return NotFound();
+            WeddingEvent? weddingEventUpdated = await _weddingEventService.RemoveGuest(idWeddingEvent, idGuest);
+            return Ok(_mapper.Map<WeddingEventDto>(weddingEventUpdated));
+        }
+        [HttpPut("AddWeddingService")]
+        public async Task<ActionResult> AddWeddingService(int idWeddingEvent, int idWeddingService)
+        {
+            WeddingEvent? existingWeddingEvent = await _weddingEventService.GetWeddingEventById(idWeddingEvent);
+            if (existingWeddingEvent == null)
+                return NotFound();
+            var existingWeddingService = await _weddingServiceService.GetWeddingServiceById(idWeddingService);
+            if(existingWeddingService == null)
+                return NotFound();
+            var weddingEventUpdated = await _weddingEventService.AddWeddingService(idWeddingEvent, idWeddingService);
+            return Ok(_mapper.Map<WeddingEventDto>(weddingEventUpdated));
+        }
+        [HttpPut("RemoveWeddingService")]
+        public async Task<ActionResult> RemoveWeddingService(int idWeddingEvent, int idWeddingService)
+        {
+            WeddingEvent? existingWeddingEvent = await _weddingEventService.GetWeddingEventById(idWeddingEvent);
+            if (existingWeddingEvent == null)
+                return NotFound();
+            var existingWeddingService = await _weddingServiceService.GetWeddingServiceById(idWeddingService);
+            if (existingWeddingService == null)
+                return NotFound();
+            var weddingEventUpdated = await _weddingEventService.RemoveWeddingService(idWeddingEvent, idWeddingService);
+            return Ok(_mapper.Map<WeddingEventDto>(weddingEventUpdated));
+        }
+
         [HttpDelete("DeleteWeddingEvent")]
         public async Task<ActionResult> DeleteWeddingEvent(int id)
         { 
