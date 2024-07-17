@@ -22,7 +22,7 @@ namespace weddingApp.Services.Implementation
         }
         public async Task<WeddingEvent> GetWeddingEventById(int id)
         {
-            Task<WeddingEvent?>? weddingEvent =  _db.WeddingEvents.FirstOrDefaultAsync(x=>x.Id == id);
+            Task<WeddingEvent?>? weddingEvent = _db.WeddingEvents.FirstOrDefaultAsync(x=>x.Id == id);
             return await weddingEvent;
         }
         public async Task<WeddingEvent> CreateWeddingEvent(WeddingEvent weddingEvent)
