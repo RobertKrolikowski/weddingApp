@@ -1,4 +1,5 @@
-﻿using weddingApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using weddingApp.Data;
 using weddingApp.Model.Entities;
 using weddingApp.Services.Interfaces;
 
@@ -13,28 +14,44 @@ namespace weddingApp.Services.Implementation
             _configuration = configuration;
             _db = db;
         }
-        public Task<IEnumerable<WeddingService>> GetAllWeddingServices()
+        public async Task<IEnumerable<WeddingService>> GetAllWeddingServices()
         {
-            throw new NotImplementedException();
+            Task<List<WeddingService>>? weddingServices = _db.WeddingServices.ToListAsync();
+            return await weddingServices;
         }
 
-        public Task<WeddingService> GetWeddingServiceById(int id)
+        public async Task<WeddingService> GetWeddingServiceById(int id)
         {
-            throw new NotImplementedException();
+            Task<WeddingService?>? weddingService = _db.WeddingServices.FirstOrDefaultAsync(x => x.Id == id);
+            return await weddingService;
         }
 
-        public Task<WeddingService> CreateWeddingService(WeddingService weddingService)
+        public async Task<WeddingService> CreateWeddingService(WeddingService weddingService)
         {
-            throw new NotImplementedException();
+            _db.WeddingServices.Add(weddingService);
+            await _db.SaveChangesAsync();
+            return weddingService;
         }
-        public Task<WeddingService> UpdateWeddinService(WeddingService weddingService)
+        public async Task<WeddingService> UpdateWeddingService(WeddingService weddingService)
         {
-            throw new NotImplementedException();
-        }
-        public Task<WeddingService> DeleteWeddingService(WeddingService weddingService)
-        {
-            throw new NotImplementedException();
-        }
+            var exisitingWeddingService = await _db.WeddingServices.FindAsync(weddingService);
+            if(exisitingWeddingService == null)
+                throw new ArgumentException($"Wedding service with id {weddingService.Id} not found");
 
+            exisitingWeddingService.Price = weddingService.Price;
+            exisitingWeddingService.Number = weddingService.Number;
+            exisitingWeddingService.Done = weddingService.Done;
+            exisitingWeddingService.Service = weddingService.Service;
+            _db.Update(exisitingWeddingService);
+            await _db.SaveChangesAsync();
+            return weddingService;
+
+        }
+        public async Task<WeddingService> DeleteWeddingService(WeddingService weddingService)
+        {
+            _db.Remove(weddingService);
+            await _db.SaveChangesAsync();
+            return weddingService;
+        }
     }
 }
