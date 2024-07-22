@@ -22,7 +22,7 @@ namespace weddingApp.Services.Implementation
         }
         public async Task<WeddingEvent> GetWeddingEventById(int id)
         {
-            Task<WeddingEvent?>? weddingEvent =  _db.WeddingEvents.FirstOrDefaultAsync(x=>x.Id == id);
+            Task<WeddingEvent?>? weddingEvent = _db.WeddingEvents.FirstOrDefaultAsync(x=>x.Id == id);
             return await weddingEvent;
         }
         public async Task<WeddingEvent> CreateWeddingEvent(WeddingEvent weddingEvent)
@@ -54,7 +54,7 @@ namespace weddingApp.Services.Implementation
             return weddingEvent;
         }
 
-        public async Task AddGift(int idWeddingEvent, int idGift)
+        public async Task<WeddingEvent> AddGift(int idWeddingEvent, int idGift)
         {
             WeddingEvent? existingWeddingEvent = await _db.WeddingEvents.FindAsync(idWeddingEvent);
             if (existingWeddingEvent == null)
@@ -65,9 +65,10 @@ namespace weddingApp.Services.Implementation
             existingWeddingEvent.Gifts.Add(existingGift);
             _db.Update(existingWeddingEvent);
             await _db.SaveChangesAsync();
+            return existingWeddingEvent;
         }
 
-        public async Task RemoveGift(int idWeddingEvent, int idGift)
+        public async Task<WeddingEvent> RemoveGift(int idWeddingEvent, int idGift)
         {
             WeddingEvent? existingWeddingEvent = await _db.WeddingEvents.FindAsync(idWeddingEvent);
             if (existingWeddingEvent == null)
@@ -78,9 +79,10 @@ namespace weddingApp.Services.Implementation
             existingWeddingEvent.Gifts.Remove(existingGift);
             _db.Update(existingWeddingEvent);
             await _db.SaveChangesAsync();
+            return existingWeddingEvent;
         }
 
-        public async Task AddGuest(int idWeddingEvent, int idGuest)
+        public async Task<WeddingEvent> AddGuest(int idWeddingEvent, int idGuest)
         {
             WeddingEvent? existingWeddingEvent = await _db.WeddingEvents.FindAsync(idWeddingEvent);
             if (existingWeddingEvent == null)
@@ -91,9 +93,10 @@ namespace weddingApp.Services.Implementation
             existingWeddingEvent.Guests.Add(existingGuest);
             _db.Update(existingWeddingEvent);
             await _db.SaveChangesAsync();
+            return existingWeddingEvent;
         }
 
-        public async Task RemoveGuest(int idWeddingEvent, int idGuest)
+        public async Task<WeddingEvent> RemoveGuest(int idWeddingEvent, int idGuest)
         {
             WeddingEvent? existingWeddingEvent = await _db.WeddingEvents.FindAsync(idWeddingEvent);
             if (existingWeddingEvent == null)
@@ -104,9 +107,10 @@ namespace weddingApp.Services.Implementation
             existingWeddingEvent.Guests.Remove(existingGuest);
             _db.Update(existingWeddingEvent);
             await _db.SaveChangesAsync();
+            return existingWeddingEvent;
         }
 
-        public async Task AddWeddingService(int idWeddingEvent, int idWeddingService)
+        public async Task<WeddingEvent> AddWeddingService(int idWeddingEvent, int idWeddingService)
         {
             WeddingEvent? existingWeddingEvent = await _db.WeddingEvents.FindAsync(idWeddingEvent);
             if (existingWeddingEvent == null)
@@ -117,9 +121,10 @@ namespace weddingApp.Services.Implementation
             existingWeddingEvent.WeddingServices.Add(existingWeddingService);
             _db.Update(existingWeddingEvent);
             await _db.SaveChangesAsync();
+            return existingWeddingEvent;
         }
 
-        public async Task RemoveWeddingService(int idWeddingEvent, int idWeddingService)
+        public async Task<WeddingEvent> RemoveWeddingService(int idWeddingEvent, int idWeddingService)
         {
             WeddingEvent? existingWeddingEvent = await _db.WeddingEvents.FindAsync(idWeddingEvent);
             if (existingWeddingEvent == null)
@@ -130,6 +135,7 @@ namespace weddingApp.Services.Implementation
             existingWeddingEvent.WeddingServices.Remove(existingWeddingService);
             _db.Update(existingWeddingEvent);
             await _db.SaveChangesAsync();
+            return existingWeddingEvent;
         }
     }
 }
