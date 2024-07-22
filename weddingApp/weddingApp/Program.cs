@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using weddingApp.MappingProfiles;
 using weddingApp.Services.Interfaces;
 using weddingApp.Services.Implementation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using weddingApp.Services.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +21,10 @@ builder.Services.AddScoped<IThingService, ThingService>();
 builder.Services.AddScoped<IGiftService, GiftService>();
 builder.Services.AddScoped<IGuestService, GuestService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
-builder.Services.AddScoped<IUserService, UserServise>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICoupleService, CoupleService>();
 builder.Services.AddScoped<IWeddingEventService, WeddingEventService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WeddingAppContext>(
@@ -30,6 +35,27 @@ builder.Services.AddControllersWithViews()
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
 );
 builder.Services.AddAutoMapper(typeof(WeddingMappingProfile));
+
+var jwtConfig = builder.Configuration.GetSection("JwtConfig");
+var secretKey = jwtConfig.GetValue<string>("Secret");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
+});
+
 
 var allowSpecificOrigins = "_allowSpecificOrigins";
 builder.Services.AddCors(options =>

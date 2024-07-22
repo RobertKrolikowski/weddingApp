@@ -4,6 +4,7 @@ namespace weddingApp.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<User>> GetAllUsers();
+        Task<User> Authenticate(string login, string password);
+        Task<User> CreateUserAsync(User user);
     }
 }
