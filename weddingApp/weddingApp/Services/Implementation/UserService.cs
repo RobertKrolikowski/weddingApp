@@ -14,7 +14,7 @@ namespace weddingApp.Services.Implementation
         }
         public async Task<User> Authenticate(string login, string password)
         {
-            User? user = await _context.Users.SingleOrDefaultAsync(x => x.Login == login);
+            User? user = await _context.Users.SingleOrDefaultAsync(x => x.Email == login);
             if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
                 return null;
             return user;
@@ -22,6 +22,7 @@ namespace weddingApp.Services.Implementation
         public async Task<User> CreateUserAsync(User user)
         {
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.CreateTime = DateTime.UtcNow;
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return user;

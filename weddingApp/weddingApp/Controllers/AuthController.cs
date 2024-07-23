@@ -23,12 +23,12 @@ public class AuthController : ControllerBase
     }
     //TODO dodanie register i login DTO
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] User registerDto)
+    public async Task<IActionResult> Register([FromBody] UserDto registerDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        User? existingUser = await _userService.Authenticate(registerDto.Login, registerDto.Password);
+        User? existingUser = await _userService.Authenticate(registerDto.Email, registerDto.Password);
         if (existingUser != null)
             return Conflict("Username is already taken");
 
@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
         UserDto? userDto = _mapper.Map<UserDto>(createdUser);
         string? token = _jwtService.GenerateToken(createdUser);
 
-        return CreatedAtAction(nameof(Register), new { username = userDto.Login }, new { Token = token, User = userDto });
+        return CreatedAtAction(nameof(Register), new { username = userDto.Email }, new { Token = token, User = userDto });
     }
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserDto loginDto)
@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        User? user = await _userService.Authenticate(loginDto.Login, loginDto.Password);
+        User? user = await _userService.Authenticate(loginDto.Email, loginDto.Password);
 
         if (user == null)
             return Unauthorized("Invalid credentials");
