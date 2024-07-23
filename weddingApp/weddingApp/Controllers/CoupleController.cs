@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using weddingApp.Model;
@@ -10,6 +11,7 @@ namespace weddingApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CoupleController : ControllerBase
     {
         private readonly ICoupleService _coupleService;
@@ -19,7 +21,7 @@ namespace weddingApp.Controllers
             _coupleService = coupleService;
             _mapper = mapper;
         }
-        [HttpGet("GetAllCouple")]
+        [HttpGet("GetAllCouples")]
         public async Task<ActionResult<IEnumerable<Couple>>> GetAllCouple()
         {
             IEnumerable<Couple>? couples = await _coupleService.GetAllCouples();

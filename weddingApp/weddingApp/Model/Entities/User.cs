@@ -1,13 +1,19 @@
-﻿namespace weddingApp.Model.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace weddingApp.Model.Entities
 {
     public class User
     {
         public int Id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
+        [Required]
+        [EmailAddress]  
         public string Email { get; set; }
-        public string Phone { get; set; }
-        public DateTime LastLoginDate { get; set; }
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; }
+        [Phone]
+        public string? Phone { get; set; }
+        public DateTime? LastLoginDate { get; set; }
         public DateTime CreateTime { get; set; }
     }
 }

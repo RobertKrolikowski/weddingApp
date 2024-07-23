@@ -1,21 +1,46 @@
-using System.Text.Json.Serialization;
-using weddingApp.Data;
-using Microsoft.EntityFrameworkCore;
-using weddingApp.MappingProfiles;
-using weddingApp.Services.Interfaces;
-using weddingApp.Services.Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using System.Text;
+using weddingApp.Data;
+using weddingApp.MappingProfiles;
+using weddingApp.Services.Implementation;
+using weddingApp.Services.Interfaces;
 using weddingApp.Services.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "WeddingApp API", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
 builder.Services.AddScoped<IWeatherForecastService, WeatherForecastService>();
 builder.Services.AddScoped<IThingService, ThingService>();
 builder.Services.AddScoped<IGiftService, GiftService>();
@@ -26,16 +51,18 @@ builder.Services.AddScoped<ICoupleService, CoupleService>();
 builder.Services.AddScoped<IWeddingEventService, WeddingEventService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
-builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WeddingAppContext>(
-    option => option.UseNpgsql(builder.Configuration.GetConnectionString("WeddingDB"))
-    );
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("WeddingDB"))
+);
+
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
 );
+
 builder.Services.AddAutoMapper(typeof(WeddingMappingProfile));
 
+// Configure JWT authentication
 var jwtConfig = builder.Configuration.GetSection("JwtConfig");
 var secretKey = jwtConfig.GetValue<string>("Secret");
 
@@ -56,20 +83,21 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
 var allowSpecificOrigins = "_allowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: allowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:5173");
+                          policy.WithOrigins("http://localhost:5173")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
                       });
 });
+
 var app = builder.Build();
 app.UseCors(allowSpecificOrigins);
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -77,7 +105,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

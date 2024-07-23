@@ -183,19 +183,14 @@ namespace weddingApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastLoginDate")
+                    b.Property<DateTime?>("LastLoginDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

@@ -23,9 +23,9 @@ namespace weddingApp.Services.Security
                 Subject = new ClaimsIdentity(
             [
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Login)
+                new Claim(ClaimTypes.Name, user.Email)
             ]),
-                Expires = DateTime.UtcNow.AddMinutes(30),
+                Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             SecurityToken? token = tokenHandler.CreateToken(tokenDescriptor);
